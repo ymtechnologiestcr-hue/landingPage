@@ -53,7 +53,7 @@ export function Register() {
     };
 
     try {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+      const baseUrl = import.meta.env['VITE_API_BASE_URL'] || "http://localhost:5001/api";
       const response = await fetch(`${baseUrl}/agencies/register`, {
         method: "POST",
         headers: {
