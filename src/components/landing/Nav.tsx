@@ -1,19 +1,51 @@
 import { useEffect, useState } from "react";
 import { Menu, X, Flame } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { label: "Home", href: "#home" },
-  { label: "Products", href: "#products" },
-  { label: "Solutions", href: "#solution" },
-  { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#register" },
+type NavLink = { label: string; href: string };
+
+const defaultLinks: NavLink[] = [
+  { label: "Home", href: "/" },
+  { label: "IT Solutions", href: "/it-solutions" },
+  { label: "Services", href: "#expertise" },
+  { label: "Insights", href: "#insights" },
+  { label: "Contact", href: "#contact" },
 ];
 
-export function Nav() {
+function NavItem({
+  link,
+  className,
+  onClick,
+}: {
+  link: NavLink;
+  className: string;
+  onClick?: () => void;
+}) {
+  if (link.href.startsWith("/")) {
+    return (
+      <Link to={link.href} className={className} onClick={onClick}>
+        {link.label}
+      </Link>
+    );
+  }
+  return (
+    <a href={link.href} className={className} onClick={onClick}>
+      {link.label}
+    </a>
+  );
+}
+
+export function Nav({
+  links = defaultLinks,
+  tagline = "Accounting & Tax Consultancy",
+  cta = { label: "Book Consultation", href: "#contact" },
+}: {
+  links?: NavLink[];
+  tagline?: string;
+  cta?: NavLink;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -34,7 +66,7 @@ export function Nav() {
       )}
     >
       <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-        <a href="#home" className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5">
           <span
             className="flex size-9 items-center justify-center rounded-xl text-primary-foreground"
             style={{ backgroundImage: "var(--gradient-brand)" }}
@@ -45,27 +77,27 @@ export function Nav() {
             <span className="text-[15px] font-extrabold tracking-tight text-foreground">
               Youngest Minds
             </span>
-            <span className="text-[11px] font-medium text-muted-foreground">
-              LPG Agency Management
-            </span>
+            <span className="text-[11px] font-medium text-muted-foreground">{tagline}</span>
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
-            <a
+            <NavItem
               key={l.label}
-              href={l.href}
+              link={l}
               className="rounded-full px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {l.label}
-            </a>
+            />
           ))}
         </div>
 
         <div className="hidden lg:block">
           <Button variant="brand" size="lg" asChild>
-            <a href="#register">Register Agency</a>
+            {cta.href.startsWith("/") ? (
+              <Link to={cta.href}>{cta.label}</Link>
+            ) : (
+              <a href={cta.href}>{cta.label}</a>
+            )}
           </Button>
         </div>
 
@@ -82,20 +114,24 @@ export function Nav() {
         <div className="border-t border-border bg-background px-5 pb-6 pt-2 lg:hidden">
           <div className="flex flex-col">
             {links.map((l) => (
-              <a
+              <NavItem
                 key={l.label}
-                href={l.href}
+                link={l}
                 onClick={() => setOpen(false)}
                 className="rounded-xl px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
-              >
-                {l.label}
-              </a>
+              />
             ))}
           </div>
           <Button variant="brand" size="lg" className="mt-4 w-full" asChild>
-            <a href="#register" onClick={() => setOpen(false)}>
-              Register Agency
-            </a>
+            {cta.href.startsWith("/") ? (
+              <Link to={cta.href} onClick={() => setOpen(false)}>
+                {cta.label}
+              </Link>
+            ) : (
+              <a href={cta.href} onClick={() => setOpen(false)}>
+                {cta.label}
+              </a>
+            )}
           </Button>
         </div>
       )}

@@ -1,23 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
-import { Hero } from "@/components/landing/Hero";
-import { Trust } from "@/components/landing/Trust";
-import { Problems } from "@/components/landing/Problems";
-import { Solution } from "@/components/landing/Solution";
-import { Products } from "@/components/landing/Products";
-import { HowItWorks } from "@/components/landing/HowItWorks";
-import { Benefits } from "@/components/landing/Benefits";
-import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
-import { AutomationFlow } from "@/components/landing/AutomationFlow";
-import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
-import { Pricing } from "@/components/landing/Pricing";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { PoweredBy } from "@/components/landing/PoweredBy";
-import { Register } from "@/components/landing/Register";
+import { AccountingHero } from "@/components/home/AccountingHero";
+import { Expertise } from "@/components/home/Expertise";
+import { ConsultCta } from "@/components/home/ConsultCta";
+import { Insights } from "@/components/home/Insights";
+import { Contact } from "@/components/home/Contact";
 
-const title = "LPG Agency Management System | Youngest Minds";
+const title = "Accounting & Tax Services in Thrissur | YM Consultancy";
 const description =
-  "Run your LPG agency without the daily chaos. One cloud platform with six apps for deliveries, stock, purchases, cash flow, employees and customers.";
+  "YM Consultancy (Youngest Minds) offers accounting, bookkeeping, GST registration and filing, income tax return filing, MCA compliance and startup consultancy in Thrissur, Kerala.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,28 +21,19 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: Home,
 });
 
-function Index() {
+function Home() {
   return (
-    <div className="min-h-screen bg-background scroll-smooth">
+    <div className="min-h-screen scroll-smooth bg-background">
       <Nav />
       <main>
-        <Hero />
-        <Trust />
-        <Problems />
-        <Solution />
-        <Products />
-        <HowItWorks />
-        <Benefits />
-        <DashboardShowcase />
-        <AutomationFlow />
-        <FeaturesGrid />
-        <Pricing />
-        <Testimonials />
-        <PoweredBy />
-        <Register />
+        <AccountingHero />
+        <Expertise />
+        <ConsultCta />
+        <Insights />
+        <Contact />
       </main>
     </div>
   );

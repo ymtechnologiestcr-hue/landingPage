@@ -38,7 +38,7 @@ export function Register() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    
+
     const payload = {
       agencyName: formData.get("agencyName") as string,
       gstNumber: formData.get("gstNumber") as string,
@@ -53,7 +53,7 @@ export function Register() {
     };
 
     try {
-      const baseUrl = import.meta.env['VITE_API_BASE_URL'] || "http://localhost:5001/api";
+      const baseUrl = import.meta.env["VITE_API_BASE_URL"] || "http://localhost:5001/api";
       const response = await fetch(`${baseUrl}/agencies/register`, {
         method: "POST",
         headers: {
@@ -71,7 +71,9 @@ export function Register() {
         toast.error(errorMsg);
       }
     } catch (error: any) {
-      toast.error(error.message || "Failed to register agency. Please check your network connection.");
+      toast.error(
+        error.message || "Failed to register agency. Please check your network connection.",
+      );
     } finally {
       setLoading(false);
     }
@@ -127,10 +129,7 @@ export function Register() {
                   </Button>
                 </div>
               ) : (
-                <form
-                  className="grid gap-5 sm:grid-cols-2"
-                  onSubmit={handleSubmit}
-                >
+                <form className="grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
                   <h3 className="text-xl font-extrabold text-foreground sm:col-span-2">
                     Agency Registration
                   </h3>
@@ -175,7 +174,10 @@ export function Register() {
                       required
                       className="mt-0.5"
                     />
-                    <Label htmlFor="terms" className="text-xs leading-relaxed text-muted-foreground">
+                    <Label
+                      htmlFor="terms"
+                      className="text-xs leading-relaxed text-muted-foreground"
+                    >
                       I agree to the Terms &amp; Conditions and Privacy Policy.
                     </Label>
                   </div>
