@@ -1,20 +1,50 @@
-import { useState } from "react";
-import { CheckCircle2, MapPin, Phone, Mail } from "lucide-react";
+﻿import { useState, useRef } from "react";
+import { CheckCircle2, MapPin, Phone, Mail, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Reveal } from "@/components/landing/Reveal";
+import { toast } from "sonner";
+
+const EMAILJS_SERVICE_ID = "service_q1nd7iq";
+const EMAILJS_TEMPLATE_ID = "template_1lirmc3";
+const EMAILJS_PUBLIC_KEY = "4I03j8bXbhPQVAPHi";
 
 const fields = [
-  { id: "first", label: "First name", placeholder: "Arjun" },
-  { id: "last", label: "Last name", placeholder: "Menon" },
-  { id: "email", label: "Email", placeholder: "you@business.com", type: "email" },
-  { id: "phone", label: "Phone", placeholder: "94960 20731", type: "tel" },
-  { id: "address", label: "Address", placeholder: "Thrissur, Kerala", full: true },
+  { id: "first", label: "First name", placeholder: "Arjun", name: "first_name" },
+  { id: "last", label: "Last name", placeholder: "Menon", name: "last_name" },
+  { id: "email", label: "Email", placeholder: "you@business.com", type: "email", name: "email" },
+  { id: "phone", label: "Phone", placeholder: "94960 20731", type: "tel", name: "phone" },
+  { id: "address", label: "Address", placeholder: "Thrissur, Kerala", full: true, name: "address" },
 ];
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+
+    setLoading(true);
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY,
+      );
+      toast.success("Enquiry sent successfully!");
+      setSubmitted(true);
+    } catch (error: any) {
+      console.error("EmailJS error:", error);
+      toast.error(error?.text || "Failed to send enquiry. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section id="contact" className="section-pad">
@@ -57,7 +87,10 @@ export function Contact() {
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
                       <Mail className="size-3.5" />
-                      <a className="hover:text-foreground" href="mailto:youngestminds.tcr@gmail.com">
+                      <a
+                        className="hover:text-foreground"
+                        href="mailto:youngestminds.tcr@gmail.com"
+                      >
                         youngestminds.tcr@gmail.com
                       </a>
                     </p>
@@ -89,11 +122,9 @@ export function Contact() {
                 </div>
               ) : (
                 <form
+                  ref={formRef}
                   className="grid gap-5 sm:grid-cols-2"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSubmitted(true);
-                  }}
+                  onSubmit={handleSubmit}
                 >
                   <h3 className="text-xl font-extrabold text-foreground sm:col-span-2">
                     Send your enquiry
@@ -106,8 +137,10 @@ export function Contact() {
                       </Label>
                       <Input
                         id={f.id}
+                        name={f.name}
                         type={f.type ?? "text"}
                         required
+                        disabled={loading}
                         placeholder={f.placeholder}
                         className="mt-2 h-11 rounded-xl bg-card"
                       />
@@ -120,16 +153,18 @@ export function Contact() {
                     </Label>
                     <select
                       id="service"
-                      defaultValue="accounting"
-                      className="mt-2 h-11 w-full rounded-xl border border-input bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      name="service"
+                      defaultValue="Accounting & Bookkeeping"
+                      disabled={loading}
+                      className="mt-2 h-11 w-full rounded-xl border border-input bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
                     >
-                      <option value="accounting">Accounting &amp; Bookkeeping</option>
-                      <option value="gst">GST Registration &amp; Filing</option>
-                      <option value="itr">Income Tax Filing</option>
-                      <option value="mca">MCA &amp; Statutory Compliance</option>
-                      <option value="audit">Audit &amp; Assurance</option>
-                      <option value="startup">Startup &amp; Setup Consultancy</option>
-                      <option value="software">IT / Software Solutions</option>
+                      <option value="Accounting & Bookkeeping">Accounting &amp; Bookkeeping</option>
+                      <option value="GST Registration & Filing">GST Registration &amp; Filing</option>
+                      <option value="Income Tax Filing">Income Tax Filing</option>
+                      <option value="MCA & Statutory Compliance">MCA &amp; Statutory Compliance</option>
+                      <option value="Audit & Assurance">Audit &amp; Assurance</option>
+                      <option value="Startup & Setup Consultancy">Startup &amp; Setup Consultancy</option>
+                      <option value="IT / Software Solutions">IT / Software Solutions</option>
                     </select>
                   </div>
 
@@ -139,9 +174,11 @@ export function Contact() {
                     </Label>
                     <textarea
                       id="message"
+                      name="message"
                       rows={4}
+                      disabled={loading}
                       placeholder="Tell us briefly about your business and what you need help with."
-                      className="mt-2 w-full rounded-xl border border-input bg-card px-3 py-2.5 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      className="mt-2 w-full rounded-xl border border-input bg-card px-3 py-2.5 text-sm text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
                     />
                   </div>
 
@@ -149,9 +186,17 @@ export function Contact() {
                     type="submit"
                     variant="brand"
                     size="xl"
+                    disabled={loading}
                     className="w-full sm:col-span-2"
                   >
-                    Submit
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Submit"
+                    )}
                   </Button>
                 </form>
               )}
