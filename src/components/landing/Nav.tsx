@@ -8,7 +8,7 @@ type NavLink = { label: string; href: string };
 
 const defaultLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "IT Solutions", href: "/it-solutions" },
+  // { label: "IT Solutions", href: "/it-solutions" },
   { label: "Services", href: "#expertise" },
   { label: "Insights", href: "#insights" },
   { label: "Contact", href: "#contact" },
@@ -60,9 +60,7 @@ export function Nav({
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-border/70 bg-background/80 backdrop-blur-xl"
-          : "bg-transparent",
+        scrolled ? "border-b border-border/70 bg-background/80 backdrop-blur-xl" : "bg-transparent",
       )}
     >
       <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
